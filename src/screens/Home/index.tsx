@@ -46,7 +46,7 @@ function Home() {
   }
 
   return (
-    <div className="bg-[#1C1C1E] min-h-screen w-screen md:pl-[180px] pb-[80px]">
+    <div className="bg-[#1C1C1E] min-h-screen w-[99.14vw] md:pl-[180px] pb-[80px]">
       <header className="text-center mb-8 p-6">
         <h1 className="text-white font-oswald pt-12">MOVE IN</h1>
         <div>
@@ -54,7 +54,7 @@ function Home() {
           <p className="text-white">Treino de hoje: {currentDayOfWeek[0]}</p>
         </div>
       </header>
-      <section className="p-6">
+      <section className="p-6 flex flex-col justify-center">
         <h2 className="text-lg font-semibold mb-4 text-white">
           Dias da Semana
         </h2>
