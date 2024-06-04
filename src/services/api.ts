@@ -34,7 +34,7 @@ export interface TrainingData {
 }
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'zesty-reverence-production.up.railway.app',
 });
 
 export const fetchStudents = async (): Promise<UserData[]> => {
