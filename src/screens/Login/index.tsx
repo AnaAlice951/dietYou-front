@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CiMail } from 'react-icons/ci';
 import { IoIosLock } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/api';
 import Toast from '../../components/toaster';
+import useAuth from '../../hooks/useAuth';
 
 function Login() {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ function Login() {
   const [email, setEmail] = useState<string>('');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const { userData } = useAuth();
   const [toastType, setToastType] = useState<
     'success' | 'warning' | 'error' | 'info'
   >('info');
@@ -36,6 +38,10 @@ function Login() {
       setShowToast(false);
     }, 3000);
   };
+
+  useEffect(() => {
+    if (userData) navigate('/home');
+  }, [userData]);
 
   return (
     <div className="h-screen w-screen flex items-center pt-[10%] bg-[#1C1C1E] flex-col gap-[5%] p-7">

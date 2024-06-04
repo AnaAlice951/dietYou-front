@@ -1,33 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MenuBar from '../../components/menu-bar';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6';
 import { LuClock4 } from 'react-icons/lu';
 import TimerPopup from '../../components/popup';
-import { fetchExercises } from '../../services/api';
+import { getExercisesByWeekday } from '../../hooks/useTraining';
 
 const Exercises: React.FC = () => {
   const location = useLocation();
-  const day = location.state?.day;
-  const exercisesData = location.state?.exercises;
-  const [exercises, setExercises] = useState<any[]>([]);
+  const { day, exercises } = location.state;
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentRepetition, setCurrentRepetition] = useState(0);
 
-  const totalExercises = exercises.length - 1;
-  const totalRepetitions = Number(
-    exercises?.[currentIndex]?.repetitions?.split('x')?.[0]
-  );
+  const filteredExercises = getExercisesByWeekday(exercises, day);
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!exercisesData) goBackHome();
-    fetchExercises(exercisesData.map((item: any) => item.exercises_id)).then(
-      setExercises
-    );
-  }, []);
 
   const openPopup = () => {
     setIsPopupOpen(true);
@@ -37,10 +25,8 @@ const Exercises: React.FC = () => {
     setIsPopupOpen(false);
   };
 
-  console.log({ currentIndex, totalExercises });
-
   const handleNextExercise = () => {
-    if (currentIndex < totalExercises) {
+    if (currentIndex < filteredExercises.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     } else {
       goBackHome();
@@ -48,7 +34,10 @@ const Exercises: React.FC = () => {
   };
 
   const handleNextRepetition = () => {
-    if (currentRepetition < totalRepetitions) {
+    const totalRepetitions = Number(
+      filteredExercises?.[currentIndex]?.repetitions?.split('x')?.[0]
+    );
+    if (currentRepetition < totalRepetitions - 1) {
       setCurrentRepetition((prev) => prev + 1);
     } else {
       closePopup();
@@ -65,12 +54,19 @@ const Exercises: React.FC = () => {
     navigate('/home');
   };
 
-  if (!exercises.length) return (
-    <div className='bg-white flex w-screen h-screen flex-col items-center justify-center'>
-      <h2>Você não tem exercícios para este dia!</h2>
-      <button className="bg-[#1C1C1E] text-white rounded-[20px] mt-4" onClick={goBackHome}>Voltar</button>
-    </div>
-  );
+  if (filteredExercises.length === 0) {
+    return (
+      <div className="bg-white flex w-screen h-screen flex-col items-center justify-center">
+        <h2>Você não tem exercícios para este dia!</h2>
+        <button
+          className="bg-[#1C1C1E] text-white rounded-[20px] mt-4"
+          onClick={goBackHome}
+        >
+          Voltar
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-100 h-screen flex flex-col pt-10 w-screen md:pl-[150px]">
@@ -88,19 +84,22 @@ const Exercises: React.FC = () => {
         </div>
       </header>
       <section className="bg-[#1C1C1E] rounded-t-[20px] w-full text-white pt-12 pb-[96px] px-12 flex flex-1 flex-col ">
-        <h2 className="text-lg mb-4  font-bold">
-          {exercises[currentIndex].name}
+        <h2 className="text-lg mb-4 font-bold">
+          {filteredExercises[currentIndex].name}
         </h2>
         <p className="text-base">
-          Descrição: {exercises[currentIndex].description}
+          Descrição: {filteredExercises[currentIndex].description}
         </p>
         <div className="flex flex-col gap-5">
           <h2 className="text-lg pt-8">
-            Repetições: {exercises[currentIndex].repetitions}
+            Repetições: {filteredExercises[currentIndex].repetitions}
           </h2>
-          <h2 className="text-lg">Carga: {exercises[currentIndex].load}</h2>
           <h2 className="text-lg">
-            Intervalo entre repetições: {exercises[currentIndex].interval}
+            Carga: {filteredExercises[currentIndex].load}
+          </h2>
+          <h2 className="text-lg">
+            Intervalo entre repetições:{' '}
+            {filteredExercises[currentIndex].interval}
           </h2>
         </div>
         <div
@@ -123,7 +122,9 @@ const Exercises: React.FC = () => {
           onClose={closePopup}
           duration={40}
           currentRepetition={currentRepetition}
-          totalRepetitions={totalRepetitions}
+          totalRepetitions={Number(
+            filteredExercises?.[currentIndex]?.repetitions?.split('x')?.[0]
+          )}
           onNextRepetition={handleNextRepetition}
         />
       )}

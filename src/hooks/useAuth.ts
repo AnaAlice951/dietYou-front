@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserData, me } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
-type UserDataType = UserData| null;
-
+type UserDataType = UserData | null;
 
 const useAuth = () => {
   const [userData, setUserData] = useState<UserDataType>(null);
+  const navigate = useNavigate();
 
   const verifyLogin = async () => {
     const token = localStorage.getItem('authToken');
@@ -24,6 +25,12 @@ const useAuth = () => {
       return false;
     }
   };
+
+  useEffect(() => {
+    verifyLogin().then((isLogged) => {
+      if (!isLogged) return navigate('/');
+    });
+  }, []);
 
   return { verifyLogin, userData };
 };
