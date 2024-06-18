@@ -5,6 +5,7 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa6';
 import { LuClock4 } from 'react-icons/lu';
 import TimerPopup from '../../components/popup';
 import { getExercisesByWeekday } from '../../hooks/useTraining';
+import Toast from '../../components/toaster';
 
 const Exercises: React.FC = () => {
   const location = useLocation();
@@ -12,6 +13,7 @@ const Exercises: React.FC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentRepetition, setCurrentRepetition] = useState(0);
+  const [showToast, setShowToast] = useState(false);
 
   const filteredExercises = getExercisesByWeekday(exercises, day);
 
@@ -20,6 +22,16 @@ const Exercises: React.FC = () => {
   const openPopup = () => {
     setIsPopupOpen(true);
   };
+
+   const extractInterval = (interval: string) => {
+     const numberString = interval.split(' ')[0];
+     return parseInt(numberString, 10);
+  };
+  
+  const intervalDuration = extractInterval(
+    filteredExercises[currentIndex].interval
+  );
+
 
   const closePopup = () => {
     setIsPopupOpen(false);
@@ -37,12 +49,15 @@ const Exercises: React.FC = () => {
     const totalRepetitions = Number(
       filteredExercises?.[currentIndex]?.repetitions?.split('x')?.[0]
     );
-    if (currentRepetition < totalRepetitions - 1) {
+    if (currentRepetition < totalRepetitions) {
       setCurrentRepetition((prev) => prev + 1);
     } else {
       closePopup();
-      handleNextExercise();
       setCurrentRepetition(0);
+      setShowToast(true)
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3300);
     }
   };
 
@@ -113,19 +128,29 @@ const Exercises: React.FC = () => {
           className="flex gap-3 py-3 bg-[#E96921] max-md:bg-[#E96921] min-w-[200px] w-1 items-center justify-center rounded-[20px] mt-16 self-center max-w-[400px] cursor-pointer"
           onClick={handleNextExercise}
         >
-          Proximo exercício <FaArrowRight />
+          {currentIndex < filteredExercises.length - 1
+            ? 'Próximo exercício'
+            : 'Finalizar dia'}
+          <FaArrowRight />
         </div>
       </section>
       <MenuBar />
       {isPopupOpen && (
         <TimerPopup
           onClose={closePopup}
-          duration={40}
+          duration={intervalDuration}
           currentRepetition={currentRepetition}
           totalRepetitions={Number(
             filteredExercises?.[currentIndex]?.repetitions?.split('x')?.[0]
           )}
           onNextRepetition={handleNextRepetition}
+        />
+      )}
+      {showToast && (
+        <Toast
+          type={'success'}
+          message={'Você conclui esse exercício! Vá para o proxímo'}
+          onClose={() => setShowToast(false)}
         />
       )}
     </div>

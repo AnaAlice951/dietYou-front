@@ -4,11 +4,11 @@ interface ToastProps {
   onClose: () => void;
 }
 
-const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => {
+const Toast: React.FC<ToastProps> = ({ message, type, onClose,  }) => {
   const getStyles = () => {
     switch (type) {
       case 'success':
-        return 'bg-green-500';
+        return 'bg-green-500 self-center';
       case 'warning':
         return 'bg-yellow-500';
       case 'error':
