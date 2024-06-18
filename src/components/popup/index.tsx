@@ -86,11 +86,9 @@ const TimerPopup: React.FC<TimerPopupProps> = ({
         </button>
         <button
           onClick={handleNextRepetition}
-          className={`bg-${
-            currentRepetition === totalRepetitions + 1 ? 'red-500' : '[#E96921]'
-          } hover:bg-${
-            currentRepetition === totalRepetitions + 1 ? 'red-500' : '[#E96921]'
-          } rounded-full p-2 mb-4 text-white`}
+          className={`bg-${currentRepetition === totalRepetitions + 1 ? 'red-500' : '[#E96921]'
+            } hover:bg-${currentRepetition === totalRepetitions + 1 ? 'red-500' : '[#E96921]'
+            } rounded-full p-2 mb-4 text-white`}
         >
           {isLastRepetition ? 'Finalizar Exercício' : 'Próxima Repetição'}
         </button>

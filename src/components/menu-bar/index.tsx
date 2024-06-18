@@ -1,7 +1,12 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import ExitPopup from '../exitpopup';
+import { useNavigate } from 'react-router-dom';
+
 
 const MenuBar: React.FC = () => {
+  const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
+  const [showExitPopup, setShowExitPopup] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -16,8 +21,18 @@ const MenuBar: React.FC = () => {
     };
   }, []);
 
-  const logout = () => {
+  const handleLogoutClick = () => {
+    setShowExitPopup(true);
+  };
+
+  const handleLogoutConfirm = () => {
     localStorage.removeItem('authToken');
+    setShowExitPopup(false);
+    navigate('/');
+  };
+
+  const handleLogoutCancel = () => {
+    setShowExitPopup(false);
   };
 
   return (
@@ -29,7 +44,11 @@ const MenuBar: React.FC = () => {
       }`}
     >
       <div className="relative"></div>
-      <div className={`overflow-auto h-full flex justify-center items-center ${isMobile ? 'flex-row' : 'flex-col'}`}>
+      <div
+        className={`overflow-auto h-full flex justify-center items-center ${
+          isMobile ? 'flex-row' : 'flex-col'
+        }`}
+      >
         <div>
           <a
             href="/home"
@@ -51,8 +70,8 @@ const MenuBar: React.FC = () => {
         </div>
         <div>
           <a
-            href="/"
-            onClick={logout}
+            href="#"
+            onClick={handleLogoutClick}
             className="text-white hover:text-blue-600 text-[15px] flex items-center hover:bg-white rounded px-4 py-3 transition-all"
           >
             <svg
@@ -70,6 +89,9 @@ const MenuBar: React.FC = () => {
           </a>
         </div>
       </div>
+      {showExitPopup && (
+        <ExitPopup logout={handleLogoutConfirm} onClose={handleLogoutCancel} />
+      )}
     </nav>
   );
 };
