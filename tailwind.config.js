@@ -7,7 +7,11 @@ export default {
       sans: ['"Inter var", sans-serif'],
       montserrat: ['"Montserrat", sans-serif'],
       oswald: ['"Oswald", sans-serif'],
+      gilda: ['"Gilda", sans-serif'],
     },
   },
   plugins: [],
+  screens: {
+    xs: '400px',
+  },
 };

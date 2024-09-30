@@ -1,40 +1,37 @@
-import { useNavigate } from 'react-router-dom';
 import MenuBar from '../../components/menu-bar';
-import { UserData } from '../../services/api';
 import useAuth from '../../hooks/useAuth';
-import { RiArrowRightDoubleFill } from 'react-icons/ri';
-import { RiArrowDropRightLine } from 'react-icons/ri';
-import useTraining from '../../hooks/useTraining';
+import useMeals from '../../hooks/useMeals';
+import Meals from '../Meals';
+import { useEffect, useState } from 'react';
+import { FiLogOut } from 'react-icons/fi';
+import Logo from '../../assets/imgs/dietYouLogo.png'
 
 function Home() {
-  const navigate = useNavigate();
   const { userData } = useAuth();
-  const { exercises, loading } = useTraining();
+  const { meals, loading } = useMeals();
 
   const getCurrentDayOfWeek = () => {
-    const daysOfWeek = [
-      'domingo',
-      'segunda-feira',
-      'terça-feira',
-      'quarta-feira',
-      'quinta-feira',
-      'sexta-feira',
-      'sábado',
-    ];
+    const daysOfWeek = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
     const todayIndex = new Date().getDay();
     const reorderedDaysOfWeek = [
       ...daysOfWeek.slice(todayIndex),
       ...daysOfWeek.slice(0, todayIndex),
     ];
-    return reorderedDaysOfWeek;
+    return { daysOfWeek, reorderedDaysOfWeek };
   };
+type DaysOfWeek = 'dom' | 'seg' | 'ter' | 'qua' | 'qui' | 'sex' | 'sab';
 
-  const currentDayOfWeek = getCurrentDayOfWeek();
+  const currentDayOfWeek = getCurrentDayOfWeek().reorderedDaysOfWeek[0];
+  const daysOfWeek = getCurrentDayOfWeek().daysOfWeek;
+  const [selectedDay, setSelectedDay] = useState(currentDayOfWeek);
+  const [meal, setMeal] = useState(meals[currentDayOfWeek.toLowerCase() as DaysOfWeek]);
+  
+  useEffect(() => {
+    setMeal(meals[selectedDay.toLowerCase() as DaysOfWeek]);
+  }, [selectedDay, meals, currentDayOfWeek]);
 
-  const handleDayClick = (day: string, userData: UserData | null) => {
-    navigate(`/treino`, {
-      state: { day, userData, exercises },
-    });
+  const handleDayClick = (day: string) => {
+    setSelectedDay(day);
   };
 
   if (loading) {
@@ -46,36 +43,41 @@ function Home() {
   }
 
   return (
-    <div className="bg-[#1C1C1E] min-h-screen w-[99.14vw] md:pl-[180px] pb-[80px]">
-      <header className="text-center mb-8 p-6">
-        <h1 className="text-white font-oswald pt-12">MOVE IN</h1>
-        <div>
-          <p className="text-lg text-[#FF5C00]">Olá, {userData?.name}!</p>
-          <p className="text-white">Treino de hoje: {currentDayOfWeek[0]}</p>
+    <div className="bg-[#FEFEFE] md:w-[100%] h-full  overflow-y-hidden">
+      <header className="text-center flex flex-col items-center justify-center md:ml-[150px] h-[20%] min-h-[190px]">
+        <img
+          src={Logo}
+          className="md:h-[155px] md:w-[155px] h-[75px] w-[75px] flex mt-3"
+        ></img>
+        <div className="flex items-start justify-start w-full mt-5">
+          <p className="md:text-[30px] text-[25px] text-[#2C5944] flex justify-center items-center md:ml-[5%] max-md:px-10">
+            Olá, {userData?.name}!
+          </p>
         </div>
+        <FiLogOut className="text-black opacity-25 md:h-10 md:w-10 h-8 w-8 absolute md:right-5 md:top-5 right-5 top-4" />
       </header>
-      <section className="p-6 flex flex-col justify-center">
-        <h2 className="text-lg font-semibold mb-4 text-white">
-          Dias da Semana
-        </h2>
-        <ul className="flex flex-col gap-4">
-          {currentDayOfWeek.map((day, index) => (
-            <li
-              key={index}
-              className={`bg-white p-4 shadow-md flex items-center justify-between ${
-                index === 0 ? 'text-xl font-bold p-10' : ''
-              }`}
-              onClick={() => handleDayClick(day, userData)}
-            >
-              <span>{day.charAt(0).toUpperCase() + day.slice(1)}</span>
-              {index == 0 ? (
-                <RiArrowRightDoubleFill className="text-6xl" />
-              ) : (
-                <RiArrowDropRightLine className="text-4xl" />
-              )}
-            </li>
-          ))}
-        </ul>
+      <section className="flex flex-col justify-center items-center bg-[#FEFEFE] md:ml-[150px] md:mb-0 ml-0 mb-[80px] h-[80%] overflow-y-hidden">
+        <div className="w-[90%] bg-[#F2EFEF] rounded-xl flex flex-col justify-start items-center h-[90%] py-5 overflow-y-hidden">
+          <ul className="flex md:gap-10 gap-3 flex-row md:text-xl text-base md:pt-5 pt-3">
+            {daysOfWeek.map((day, index) => (
+              <li
+                key={index}
+                className={`text-[#494747] flex items-center justify-between cursor-pointer ${
+                  day === selectedDay
+                    ? 'text-[#2C5945] font-bold shadow-text-two'
+                    : 'opacity-50'
+                }`}
+                onClick={() => handleDayClick(day)}
+              >
+                <span>{day.charAt(0).toUpperCase() + day.slice(1)}</span>
+              </li>
+            ))}
+          </ul>
+          <h3 className="text-[#2C5944] shadow-text-two md:text-lg text-base pt-5">
+            Refeições
+          </h3>
+          <Meals meal={meal} />
+        </div>
       </section>
       <MenuBar />
     </div>

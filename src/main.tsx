@@ -1,31 +1,31 @@
 import './index.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import ForgotPassword from './screens/ForgotPassword/index.tsx';
 import Login from './screens/Login/index.tsx';
-import SignUp from './screens/SignUp/index.tsx';
 import Home from './screens/Home/index.tsx';
+import Recipes from './screens/Recipes/index.tsx';
 import { createRoot } from 'react-dom/client';
 import { Suspense, lazy } from 'react';
+import SplashScreen from './screens/SplashScreen/index.tsx';
 
-const Exercises = lazy(() => import('./screens/Exercises'));
+// const Recipes = lazy(() => import('./screens/Recipes'));
 
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/forgotpassword" element={<ForgotPassword />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/" element={<SplashScreen />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
-        <Route
-          path="/treino"
+        <Route path="/receitas" element={<Recipes />} />
+        {/* <Route
+          path="/receitas"
           element={
             <Suspense fallback={<div>Carregando...</div>}>
-              <Exercises />
+              <Recipes />
             </Suspense>
           }
-        />
+        /> */}
       </Routes>
     </Router>
   );

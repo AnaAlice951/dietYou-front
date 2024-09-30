@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../../services/api';
 import Toast from '../../components/toaster';
 import useAuth from '../../hooks/useAuth';
+import Logo from '../../assets/imgs/dietYouLogo.png'
+import { FaArrowLeft } from 'react-icons/fa6';
 
 function Login() {
   const navigate = useNavigate();
 
   const handleNavigate = (navigateTo: string) => {
-    navigate(navigateTo);
+     navigate(navigateTo);
   };
   const [password, setPassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -28,7 +30,7 @@ function Login() {
       setToastType('success');
       setToastMessage('Login realizado com sucesso!');
       localStorage.setItem('authToken', token);
-      handleNavigate('home');
+      handleNavigate('/home');
     } catch (error) {
       setToastType('error');
       setToastMessage((error as Error).message);
@@ -40,16 +42,23 @@ function Login() {
   };
 
   useEffect(() => {
-    if (userData) navigate('/home');
+    // if (userData) navigate('/home');
   }, [userData]);
 
   return (
-    <div className="h-screen w-screen flex items-center pt-[10%] bg-[#1C1C1E] flex-col gap-[5%] p-7">
-      <div className="max-w-md w-full text-center flex flex-col gap-9">
-        <h2 className="text-white">Bem vindo</h2>
-        <h2 className="text-white">Entre com sua conta aqui</h2>
-        <h1 className="text-white font-oswald pt-12">MOVE IN</h1>
-
+    <div className="h-screen w-screen flex items-center bg-[#FEFEFE] flex-col gap-[5%]">
+      <header className="w-full min-h-24 justify-center items-center flex-row flex bg-[#DDDBDB] p-0 rounded-b-1xl">
+        <div
+          className="bg-[#2C5944] w-fit h-fit p-2 rounded-full absolute md:left-20 left-10"
+          onClick={() => navigate('/')}
+        >
+          <FaArrowLeft className="text-2xl text-white" />
+        </div>
+        <img src={Logo} className="h-[75px] w-[75px] flex"></img>
+      </header>
+      <div className="max-w-md w-full h-full text-center flex flex-col gap-9 justify-center items-center p-7">
+        <h2 className="md:text-[45px] text-[25px]">Bem vindo</h2>
+        <h2 className="md:text-[30px] text-[20px]">Entre com sua conta aqui</h2>
         <form
           className="mt-8 space-y-6 flex flex-col gap-5"
           onSubmit={handleSubmit}
@@ -70,7 +79,7 @@ function Login() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="appearance-none relative block w-full px-12 py-2 placeholder-white text-white  focus:outline-none focus:ring-[#E96921] focus:border-[#E96921] focus:z-10 text-[15px] bg-[#4D4A4A]"
+                className="appearance-none rounded-xl relative block w-full px-12 py-3 placeholder-white text-white  focus:outline-none focus:ring-[#E96921] focus:border-[#E96921] focus:z-10 md:text-[20px] text-base bg-[#4D4A4A]"
                 placeholder="Email"
               />
             </div>
@@ -88,40 +97,19 @@ function Login() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none relative block w-full px-12 py-2 placeholder-white text-white focus:outline-none focus:ring-[#E96921] focus:border-[#E96921] focus:z-10 text-[15px] bg-[#4D4A4A]"
+                  className="appearance-none rounded-xl relative block w-full px-12 py-3 placeholder-white text-white focus:outline-none focus:ring-[#E96921] focus:border-[#E96921] focus:z-10 md:text-[20px] text-base bg-[#4D4A4A]"
                   placeholder="Senha"
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-between flex-col gap-4">
-            <div className="text-sm">
-              <a
-                href="#"
-                className="font-medium text-white hover:text-[#E96921] text-[13px]"
-                onClick={() => handleNavigate('forgotpassword')}
-              >
-                Esqueceu a senha?
-              </a>
-            </div>
-            <div className="text-sm">
-              <a
-                href="#"
-                className="font-medium text-white hover:text-[#E96921] text-[13px]"
-                onClick={() => handleNavigate('signup')}
-              >
-                Cadastre-se
-              </a>
-            </div>
-          </div>
-
-          <div className="pt-10">
+          <div className="flex items-center justify-center">
             <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#E96921] hover:bg-[#E96921] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#E96921]"
+              onClick={() => handleSubmit}
+              className="mt-20 shadow-text relative w-[80%] flex justify-center py-2 px-4 border border-transparent text-[22px] shadow-xl rounded-3xl text-[#ffffff] bg-[#2C5944] hover:bg-[#64754e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#e6e6e6]"
             >
-              Entrar
+              ENTRAR
             </button>
           </div>
         </form>

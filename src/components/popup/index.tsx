@@ -2,96 +2,46 @@ import React, { useEffect, useState, useRef } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { MdOutlinePlayArrow, MdOutlineStop } from 'react-icons/md';
 import { LuClock4 } from 'react-icons/lu';
+import { RecipeData } from '../../hooks/useRecipes';
+import { FaArrowLeft } from 'react-icons/fa6';
+
 
 interface TimerPopupProps {
-  onClose: () => void;
-  duration: number; // duration in seconds
-  currentRepetition: number;
-  totalRepetitions: number;
-  onNextRepetition: () => void;
+  onClose: React.Dispatch<React.SetStateAction<boolean>>;
+  recipeData?: RecipeData;
 }
 
 const TimerPopup: React.FC<TimerPopupProps> = ({
-  onClose,
-  duration,
-  currentRepetition,
-  totalRepetitions,
-  onNextRepetition,
+  onClose, recipeData
 }) => {
-  const [timeLeft, setTimeLeft] = useState(duration);
-  const [isRunning, setIsRunning] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  useEffect(() => {
-    if (isRunning && timeLeft > 0) {
-      timerRef.current = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      setIsRunning(false);
-    }
-
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-    };
-  }, [isRunning, timeLeft]);
-
-  const handlePlayPause = () => {
-    if (isRunning) {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
-      setTimeLeft(duration);
-      setIsRunning(false);
-    } else {
-      setIsRunning(true);
-    }
-  };
-
-  const handleNextRepetition = () => {
-    setTimeLeft(duration);
-    setIsRunning(false);
-    onNextRepetition();
-  };
-
-  const isLastRepetition = currentRepetition === totalRepetitions;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="relative bg-white rounded-lg max-md:w-[85%] xl:w-[30%] w-[40%] flex flex-col items-center h-[50%] justify-center gap-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40 overflow-hidden">
+      <div className="relative bg-white rounded-lg max-md:w-[85%] xl:w-[40%] w-[50%] flex flex-col items-center h-[75%] justify-start gap-4 overflow-y-auto">
         <button
-          onClick={onClose}
-          className="absolute top-[-45px] right-[-5px] bg-gray-200 hover:bg-gray-300 rounded-full p-2"
+          onClick={() => onClose(false)}
+          className="absolute top-[5px] left-[5px] bg-[#2C5944] rounded-full p-2 z-50"
         >
-          <FaTimes className="text-xl" />
+          <FaArrowLeft className="text-xl text-white" />
         </button>
-        <h2 className="max-md:text-xl text-2xl mt-4">
-          Repetições feitas: {currentRepetition}/{totalRepetitions}
+        <h2 className="max-md:text-xl text-2xl mt-4 text-[#2C5944] shadow-text-two">
+          {recipeData!.name}
         </h2>
-        <div className="text-2xl mt-4 mb-4 flex flex-col gap-5 justify-center items-center">
-          <LuClock4 className="text-7xl" />
-          00:{timeLeft < 10 ? `0${timeLeft}` : timeLeft}
+        <div className="text-base flex flex-col gap-1 justify-center items-start px-10 pt-10">
+          <span>Ingredientes:</span>
+          {recipeData!.ingredients.ingredients.map((ingredient, index) => (
+            <span key={index}>✦ {ingredient}</span>
+          ))}
+          <br />
+          <span>Passo a passo:</span>
+          {recipeData!.steps.steps.map((step, index) => (
+            <span key={index}>
+              {step}
+              <br />
+            </span>
+          ))}
         </div>
-        <button
-          onClick={handlePlayPause}
-          className="bg-gray-200 hover:bg-gray-300 rounded-full p-2 mb-4 flex justify-center items-center"
-        >
-          {isRunning ? (
-            <MdOutlineStop className="text-3xl font-black" />
-          ) : (
-            <MdOutlinePlayArrow className="text-3xl font-black" />
-          )}
-        </button>
-        <button
-          onClick={handleNextRepetition}
-          className={`bg-${currentRepetition === totalRepetitions + 1 ? 'red-500' : '[#E96921]'
-            } hover:bg-${currentRepetition === totalRepetitions + 1 ? 'red-500' : '[#E96921]'
-            } rounded-full p-2 mb-4 text-white`}
-        >
-          {isLastRepetition ? 'Finalizar Exercício' : 'Próxima Repetição'}
-        </button>
       </div>
     </div>
   );

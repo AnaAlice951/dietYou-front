@@ -34,7 +34,7 @@ export interface TrainingData {
 }
 
 const api = axios.create({
-  baseURL: 'https://zesty-reverence-production.up.railway.app/',
+  baseURL: 'http://localhost:3000',
 });
 
 export const fetchStudents = async (): Promise<UserData[]> => {
@@ -64,13 +64,20 @@ export const fetchTraining = async (
   }
 };
 
-export const fetchExercises = async (exercisesIds: string[]) => {
+export const fetchMeals = async (account_id: string) => {
   try {
-    const response = await Promise.all(
-      exercisesIds.map((id) => api.get(`exercises/${id}`))
-    );
+    const response = await api.get(`meals/${account_id}`);
+   return response.data
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
 
-    return response.map((item) => item.data);
+export const fetchRecipes = async () => {
+  try {
+    const response = await api.get(`recipes`);
+    return response.data;
   } catch (error) {
     console.log(error);
     return [];
