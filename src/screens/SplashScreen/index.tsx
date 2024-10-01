@@ -6,7 +6,8 @@ function SplashScreen() {
 
     const handleEnterButton = () => {
       navigate('/login');
-    };
+  };
+  
   return (
     <div className="h-screen w-screen flex items-center bg-[#2C5944] flex-col gap-[5%] p-7">
       <div className="max-w-md w-full h-full text-center flex flex-col gap-9 items-center justify-center -mt-10">

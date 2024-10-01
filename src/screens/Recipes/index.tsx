@@ -7,6 +7,7 @@ import useAuth from '../../hooks/useAuth';
 import useRecipes from '../../hooks/useRecipes';
 import { FaArrowRight } from 'react-icons/fa6';
 import Popup from '../../components/popup';
+import { useNavigate } from 'react-router-dom';
 
 interface RecipesProps {
   meal?: RecipeData;
@@ -15,13 +16,28 @@ interface RecipesProps {
 const Recipes: React.FC<RecipesProps> = () => {
   const { userData } = useAuth();
   const { recipes, loading } = useRecipes();
+    const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedRecipe, setSelectedRecipe] = useState(recipes[0]);
 
-    const handleSelectRecipe = (recipe: RecipeData) => {
+  const handleSelectRecipe = (recipe: RecipeData) => {
     setModalOpen(true);
     setSelectedRecipe(recipe);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    navigate('/');
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-white flex w-screen h-screen flex-col items-center justify-center">
+        <h2>Carregando...</h2>
+        <MenuBar />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#FEFEFE] md:w-[100%] h-full flex flex-col justify-start overflow-y-hidden">
@@ -35,7 +51,10 @@ const Recipes: React.FC<RecipesProps> = () => {
             Olá, {userData?.name}!
           </p>
         </div>
-        <FiLogOut className="text-black opacity-25 md:h-10 md:w-10 h-8 w-8 absolute md:right-5 md:top-5 right-5 top-4" />
+        <FiLogOut
+          onClick={() => handleLogout()}
+          className="text-black opacity-25 md:h-10 md:w-10 h-8 w-8 absolute md:right-5 md:top-5 right-5 top-4 cursor-pointer"
+        />
       </header>
       <section className="flex flex-col justify-center items-center bg-[#FEFEFE] md:ml-[150px] md:mb-0 ml-0 mb-[80px] h-[80%] overflow-y-hidden">
         <div className="w-[90%] bg-[#F2EFEF] rounded-xl flex flex-col justify-start items-center h-[90%] py-5 overflow-y-auto">

@@ -5,10 +5,12 @@ import Meals from '../Meals';
 import { useEffect, useState } from 'react';
 import { FiLogOut } from 'react-icons/fi';
 import Logo from '../../assets/imgs/dietYouLogo.png'
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const { userData } = useAuth();
   const { meals, loading } = useMeals();
+  const navigate = useNavigate();
 
   const getCurrentDayOfWeek = () => {
     const daysOfWeek = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
@@ -38,9 +40,16 @@ type DaysOfWeek = 'dom' | 'seg' | 'ter' | 'qua' | 'qui' | 'sex' | 'sab';
     return (
       <div className="bg-white flex w-screen h-screen flex-col items-center justify-center">
         <h2>Carregando...</h2>
+        <MenuBar />
       </div>
     );
   }
+
+  const handleLogoutConfirm = () => {
+    localStorage.removeItem('authToken');
+    navigate('/');
+  };
+
 
   return (
     <div className="bg-[#FEFEFE] md:w-[100%] h-full  overflow-y-hidden">
@@ -54,7 +63,10 @@ type DaysOfWeek = 'dom' | 'seg' | 'ter' | 'qua' | 'qui' | 'sex' | 'sab';
             Olá, {userData?.name}!
           </p>
         </div>
-        <FiLogOut className="text-black opacity-25 md:h-10 md:w-10 h-8 w-8 absolute md:right-5 md:top-5 right-5 top-4" />
+        <FiLogOut
+          onClick={() => handleLogoutConfirm()}
+          className="text-black opacity-25 md:h-10 md:w-10 h-8 w-8 absolute md:right-5 md:top-5 right-5 top-4 cursor-pointer"
+        />
       </header>
       <section className="flex flex-col justify-center items-center bg-[#FEFEFE] md:ml-[150px] md:mb-0 ml-0 mb-[80px] h-[80%] overflow-y-hidden">
         <div className="w-[90%] bg-[#F2EFEF] rounded-xl flex flex-col justify-start items-center h-[90%] py-5 overflow-y-hidden">

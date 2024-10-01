@@ -28,7 +28,7 @@ const useAuth = () => {
 
   useEffect(() => {
     verifyLogin().then((isLogged) => {
-      // if (!isLogged) return navigate('/');
+    if (!isLogged) return navigate('/login');
     });
   }, []);
 

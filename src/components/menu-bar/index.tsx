@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import ExitPopup from '../exitpopup';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { LuSalad } from 'react-icons/lu';
 
 
 
 const MenuBar: React.FC = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(false);
-  const [showExitPopup, setShowExitPopup] = useState(false);
 
 
   useEffect(() => {
@@ -24,20 +21,6 @@ const MenuBar: React.FC = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  const handleLogoutClick = () => {
-    setShowExitPopup(true);
-  };
-
-  const handleLogoutConfirm = () => {
-    localStorage.removeItem('authToken');
-    setShowExitPopup(false);
-    navigate('/');
-  };
-
-  const handleLogoutCancel = () => {
-    setShowExitPopup(false);
-  };
 
   return (
     <nav
@@ -116,9 +99,6 @@ const MenuBar: React.FC = () => {
           </a>
         </div>
       </div>
-      {showExitPopup && (
-        <ExitPopup logout={handleLogoutConfirm} onClose={handleLogoutCancel} />
-      )}
     </nav>
   );
 };
