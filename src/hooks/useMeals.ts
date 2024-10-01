@@ -29,7 +29,7 @@ export interface MealsData {
 
 const useMeals = () => {
   const { userData } = useAuth();
-  const [meals, setMeals] = useState<MealsData>([]);
+  const [meals, setMeals] = useState<MealsData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import MenuBar from '../../components/menu-bar';
 import useAuth from '../../hooks/useAuth';
-import useMeals from '../../hooks/useMeals';
+import useMeals, { MealsPerDay } from '../../hooks/useMeals';
 import Meals from '../Meals';
 import { useEffect, useState } from 'react';
 import { FiLogOut } from 'react-icons/fi';
@@ -11,7 +11,7 @@ function Home() {
   const { userData } = useAuth();
   const { meals, loading } = useMeals();
   const navigate = useNavigate();
-
+  
   const getCurrentDayOfWeek = () => {
     const daysOfWeek = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'];
     const todayIndex = new Date().getDay();
@@ -21,15 +21,16 @@ function Home() {
     ];
     return { daysOfWeek, reorderedDaysOfWeek };
   };
-type DaysOfWeek = 'dom' | 'seg' | 'ter' | 'qua' | 'qui' | 'sex' | 'sab';
 
   const currentDayOfWeek = getCurrentDayOfWeek().reorderedDaysOfWeek[0];
   const daysOfWeek = getCurrentDayOfWeek().daysOfWeek;
   const [selectedDay, setSelectedDay] = useState(currentDayOfWeek);
-  const [meal, setMeal] = useState(meals[currentDayOfWeek.toLowerCase() as DaysOfWeek]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [meal, setMeal] = useState(meals[currentDayOfWeek.toLowerCase() as any] as unknown as MealsPerDay);
   
   useEffect(() => {
-    setMeal(meals[selectedDay.toLowerCase() as DaysOfWeek]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setMeal(meals[(selectedDay as any).toLowerCase()] as any);
   }, [selectedDay, meals, currentDayOfWeek]);
 
   const handleDayClick = (day: string) => {

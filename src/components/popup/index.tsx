@@ -1,7 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { FaTimes } from 'react-icons/fa';
-import { MdOutlinePlayArrow, MdOutlineStop } from 'react-icons/md';
-import { LuClock4 } from 'react-icons/lu';
+import React from 'react';
 import { RecipeData } from '../../hooks/useRecipes';
 import { FaArrowLeft } from 'react-icons/fa6';
 
