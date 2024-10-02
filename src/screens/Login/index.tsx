@@ -46,7 +46,7 @@ function Login() {
   }, [userData]);
 
   return (
-    <div className="h-screen w-screen flex items-center bg-[#FEFEFE] flex-col gap-[5%]">
+    <div className="h-screen w-screen flex items-center bg-[#FEFEFE] flex-col gap-[5%] overflow-x-hidden">
       <header className="w-full min-h-24 justify-center items-center flex-row flex bg-[#DDDBDB] p-0 rounded-b-1xl">
         <div
           className="bg-[#2C5944] w-fit h-fit p-2 rounded-full absolute md:left-20 left-10"

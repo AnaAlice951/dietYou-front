@@ -26,7 +26,7 @@ const MenuBar: React.FC = () => {
     <nav
       className={`bg-[#2C5944] fixed flex justify-center px-1 font-[sans-serif] ${
         isMobile
-          ? 'bottom-0 w-screen h-[80px] absolute'
+          ? 'top-0 w-screen h-[60px] absolute'
           : 'top-0 left-0 h-full w-[150px] absolute'
       }`}
     >

@@ -53,7 +53,7 @@ function Home() {
 
 
   return (
-    <div className="bg-[#FEFEFE] md:w-[100%] h-full  overflow-y-hidden">
+    <div className="bg-[#FEFEFE] md:w-[100%] h-full  overflow-y-hidden max-md:pt-11">
       <header className="text-center flex flex-col items-center justify-center md:ml-[150px] h-[20%] min-h-[190px]">
         <img
           src={Logo}
@@ -66,7 +66,7 @@ function Home() {
         </div>
         <FiLogOut
           onClick={() => handleLogoutConfirm()}
-          className="text-black opacity-25 md:h-10 md:w-10 h-8 w-8 absolute md:right-5 md:top-5 right-5 top-4 cursor-pointer"
+          className="text-black opacity-25 md:h-10 md:w-10 h-8 w-8 absolute md:right-5 md:top-5 right-5 top-4 cursor-pointer max-md:top-24"
         />
       </header>
       <section className="flex flex-col justify-center items-center bg-[#FEFEFE] md:ml-[150px] md:mb-0 ml-0 mb-[80px] h-[80%] overflow-y-hidden">

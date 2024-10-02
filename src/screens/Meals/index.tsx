@@ -7,7 +7,7 @@ interface MealsProps {
 
 const Meals: React.FC<MealsProps> = ({ meal }) => {
   return (
-    <div className="flex justify-center mt-2 h-full overflow-y-scroll w-[90%] px-10">
+    <div className="flex justify-center mt-2 h-full overflow-y-scroll w-[90%] px-10 overflow-x-hidden">
       {meal ? (
         <div className="max-w-full w-full flex flex-col gap-5 items-center ">
           {meal.refeicoes.map((refeicao, index) => (
